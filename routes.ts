@@ -1,5 +1,6 @@
 
 //array of routes that are accessible to public
+// these routes do not require authentication
 export const publicRoutes : string[] = []
 
 
