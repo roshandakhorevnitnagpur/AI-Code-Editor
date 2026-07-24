@@ -1,5 +1,4 @@
 import NextAuth from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "./lib/db";
 import authConfig from "./auth.config";
 import { getUserById } from "./modules/auth/actions";
@@ -22,7 +21,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             name: user.name,
             image: user.image,
 
-            account: {
+            accounts: {
               create: {
                 type: account.type,
                 provider: account.provider,
@@ -32,8 +31,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 expires_at: account.expires_at,
                 token_type: account.token_type,
                 scope: account.scope,
-                idToken: account.id_token,
-                sessionState: account.session_state,
+                id_token: account.id_token,
+                session_state:
+                  typeof account.session_state === "string"
+                    ? account.session_state
+                    : undefined,
               },
             },
           },
@@ -63,9 +65,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               expires_at: account.expires_at,
               token_type: account.token_type,
               scope: account.scope,
-              idToken: account.id_token,
-              // @ts-ignore
-              sessionState: account.session_state,
+              id_token: account.id_token,
+              session_state:
+                typeof account.session_state === "string"
+                  ? account.session_state
+                  : undefined,
             },
           });
         }
@@ -98,7 +102,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
   },
-  secret: process.env.AUtH_SECRET as string,
-  adapter: PrismaAdapter(db),
+  secret: process.env.AUTH_SECRET as string,
+  session: {
+    strategy: "jwt",
+  },
   ...authConfig,
 });
