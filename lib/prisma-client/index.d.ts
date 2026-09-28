@@ -23,6 +23,11 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  * 
  */
 export type Account = $Result.DefaultSelection<Prisma.$AccountPayload>
+/**
+ * Model Playground
+ * 
+ */
+export type Playground = $Result.DefaultSelection<Prisma.$PlaygroundPayload>
 
 /**
  * Enums
@@ -36,11 +41,27 @@ export namespace $Enums {
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
+
+export const Templates: {
+  REACT: 'REACT',
+  NEXTJS: 'NEXTJS',
+  EXPRESS: 'EXPRESS',
+  VUE: 'VUE',
+  HONO: 'HONO',
+  ANGULAR: 'ANGULAR'
+};
+
+export type Templates = (typeof Templates)[keyof typeof Templates]
+
 }
 
 export type UserRole = $Enums.UserRole
 
 export const UserRole: typeof $Enums.UserRole
+
+export type Templates = $Enums.Templates
+
+export const Templates: typeof $Enums.Templates
 
 /**
  * ##  Prisma Client ʲˢ
@@ -146,6 +167,16 @@ export class PrismaClient<
     * ```
     */
   get account(): Prisma.AccountDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.playground`: Exposes CRUD operations for the **Playground** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Playgrounds
+    * const playgrounds = await prisma.playground.findMany()
+    * ```
+    */
+  get playground(): Prisma.PlaygroundDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -588,7 +619,8 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
-    Account: 'Account'
+    Account: 'Account',
+    Playground: 'Playground'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -607,7 +639,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "account"
+      modelProps: "user" | "account" | "playground"
       txIsolationLevel: never
     }
     model: {
@@ -759,6 +791,80 @@ export namespace Prisma {
           }
         }
       }
+      Playground: {
+        payload: Prisma.$PlaygroundPayload<ExtArgs>
+        fields: Prisma.PlaygroundFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PlaygroundFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaygroundPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PlaygroundFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaygroundPayload>
+          }
+          findFirst: {
+            args: Prisma.PlaygroundFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaygroundPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PlaygroundFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaygroundPayload>
+          }
+          findMany: {
+            args: Prisma.PlaygroundFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaygroundPayload>[]
+          }
+          create: {
+            args: Prisma.PlaygroundCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaygroundPayload>
+          }
+          createMany: {
+            args: Prisma.PlaygroundCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.PlaygroundDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaygroundPayload>
+          }
+          update: {
+            args: Prisma.PlaygroundUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaygroundPayload>
+          }
+          deleteMany: {
+            args: Prisma.PlaygroundDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PlaygroundUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PlaygroundUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlaygroundPayload>
+          }
+          aggregate: {
+            args: Prisma.PlaygroundAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePlayground>
+          }
+          groupBy: {
+            args: Prisma.PlaygroundGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PlaygroundGroupByOutputType>[]
+          }
+          findRaw: {
+            args: Prisma.PlaygroundFindRawArgs<ExtArgs>
+            result: JsonObject
+          }
+          aggregateRaw: {
+            args: Prisma.PlaygroundAggregateRawArgs<ExtArgs>
+            result: JsonObject
+          }
+          count: {
+            args: Prisma.PlaygroundCountArgs<ExtArgs>
+            result: $Utils.Optional<PlaygroundCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -840,6 +946,7 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     user?: UserOmit
     account?: AccountOmit
+    playground?: PlaygroundOmit
   }
 
   /* Types for Logging */
@@ -921,10 +1028,12 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     accounts: number
+    myPlayground: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | UserCountOutputTypeCountAccountsArgs
+    myPlayground?: boolean | UserCountOutputTypeCountMyPlaygroundArgs
   }
 
   // Custom InputTypes
@@ -943,6 +1052,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountAccountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AccountWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMyPlaygroundArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlaygroundWhereInput
   }
 
 
@@ -966,6 +1082,8 @@ export namespace Prisma {
     email: string | null
     image: string | null
     role: $Enums.UserRole | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -974,6 +1092,8 @@ export namespace Prisma {
     email: string | null
     image: string | null
     role: $Enums.UserRole | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -982,6 +1102,8 @@ export namespace Prisma {
     email: number
     image: number
     role: number
+    createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -992,6 +1114,8 @@ export namespace Prisma {
     email?: true
     image?: true
     role?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1000,6 +1124,8 @@ export namespace Prisma {
     email?: true
     image?: true
     role?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1008,6 +1134,8 @@ export namespace Prisma {
     email?: true
     image?: true
     role?: true
+    createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -1089,6 +1217,8 @@ export namespace Prisma {
     email: string
     image: string | null
     role: $Enums.UserRole
+    createdAt: Date
+    updatedAt: Date
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1114,7 +1244,10 @@ export namespace Prisma {
     email?: boolean
     image?: boolean
     role?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     accounts?: boolean | User$accountsArgs<ExtArgs>
+    myPlayground?: boolean | User$myPlaygroundArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1126,11 +1259,14 @@ export namespace Prisma {
     email?: boolean
     image?: boolean
     role?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "image" | "role", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "image" | "role" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | User$accountsArgs<ExtArgs>
+    myPlayground?: boolean | User$myPlaygroundArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -1138,6 +1274,7 @@ export namespace Prisma {
     name: "User"
     objects: {
       accounts: Prisma.$AccountPayload<ExtArgs>[]
+      myPlayground: Prisma.$PlaygroundPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -1145,6 +1282,8 @@ export namespace Prisma {
       email: string
       image: string | null
       role: $Enums.UserRole
+      createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -1509,6 +1648,7 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     accounts<T extends User$accountsArgs<ExtArgs> = {}>(args?: Subset<T, User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    myPlayground<T extends User$myPlaygroundArgs<ExtArgs> = {}>(args?: Subset<T, User$myPlaygroundArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlaygroundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1543,6 +1683,8 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly image: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'UserRole'>
+    readonly createdAt: FieldRef<"User", 'DateTime'>
+    readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
     
 
@@ -1934,6 +2076,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AccountScalarFieldEnum | AccountScalarFieldEnum[]
+  }
+
+  /**
+   * User.myPlayground
+   */
+  export type User$myPlaygroundArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Playground
+     */
+    select?: PlaygroundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Playground
+     */
+    omit?: PlaygroundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaygroundInclude<ExtArgs> | null
+    where?: PlaygroundWhereInput
+    orderBy?: PlaygroundOrderByWithRelationInput | PlaygroundOrderByWithRelationInput[]
+    cursor?: PlaygroundWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PlaygroundScalarFieldEnum | PlaygroundScalarFieldEnum[]
   }
 
   /**
@@ -3068,6 +3234,1007 @@ export namespace Prisma {
 
 
   /**
+   * Model Playground
+   */
+
+  export type AggregatePlayground = {
+    _count: PlaygroundCountAggregateOutputType | null
+    _min: PlaygroundMinAggregateOutputType | null
+    _max: PlaygroundMaxAggregateOutputType | null
+  }
+
+  export type PlaygroundMinAggregateOutputType = {
+    id: string | null
+    title: string | null
+    description: string | null
+    template: $Enums.Templates | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    userId: string | null
+  }
+
+  export type PlaygroundMaxAggregateOutputType = {
+    id: string | null
+    title: string | null
+    description: string | null
+    template: $Enums.Templates | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    userId: string | null
+  }
+
+  export type PlaygroundCountAggregateOutputType = {
+    id: number
+    title: number
+    description: number
+    template: number
+    createdAt: number
+    updatedAt: number
+    userId: number
+    _all: number
+  }
+
+
+  export type PlaygroundMinAggregateInputType = {
+    id?: true
+    title?: true
+    description?: true
+    template?: true
+    createdAt?: true
+    updatedAt?: true
+    userId?: true
+  }
+
+  export type PlaygroundMaxAggregateInputType = {
+    id?: true
+    title?: true
+    description?: true
+    template?: true
+    createdAt?: true
+    updatedAt?: true
+    userId?: true
+  }
+
+  export type PlaygroundCountAggregateInputType = {
+    id?: true
+    title?: true
+    description?: true
+    template?: true
+    createdAt?: true
+    updatedAt?: true
+    userId?: true
+    _all?: true
+  }
+
+  export type PlaygroundAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Playground to aggregate.
+     */
+    where?: PlaygroundWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Playgrounds to fetch.
+     */
+    orderBy?: PlaygroundOrderByWithRelationInput | PlaygroundOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PlaygroundWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Playgrounds from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Playgrounds.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Playgrounds
+    **/
+    _count?: true | PlaygroundCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PlaygroundMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PlaygroundMaxAggregateInputType
+  }
+
+  export type GetPlaygroundAggregateType<T extends PlaygroundAggregateArgs> = {
+        [P in keyof T & keyof AggregatePlayground]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePlayground[P]>
+      : GetScalarType<T[P], AggregatePlayground[P]>
+  }
+
+
+
+
+  export type PlaygroundGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlaygroundWhereInput
+    orderBy?: PlaygroundOrderByWithAggregationInput | PlaygroundOrderByWithAggregationInput[]
+    by: PlaygroundScalarFieldEnum[] | PlaygroundScalarFieldEnum
+    having?: PlaygroundScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PlaygroundCountAggregateInputType | true
+    _min?: PlaygroundMinAggregateInputType
+    _max?: PlaygroundMaxAggregateInputType
+  }
+
+  export type PlaygroundGroupByOutputType = {
+    id: string
+    title: string
+    description: string
+    template: $Enums.Templates
+    createdAt: Date
+    updatedAt: Date
+    userId: string
+    _count: PlaygroundCountAggregateOutputType | null
+    _min: PlaygroundMinAggregateOutputType | null
+    _max: PlaygroundMaxAggregateOutputType | null
+  }
+
+  type GetPlaygroundGroupByPayload<T extends PlaygroundGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PlaygroundGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PlaygroundGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PlaygroundGroupByOutputType[P]>
+            : GetScalarType<T[P], PlaygroundGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PlaygroundSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    description?: boolean
+    template?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["playground"]>
+
+
+
+  export type PlaygroundSelectScalar = {
+    id?: boolean
+    title?: boolean
+    description?: boolean
+    template?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+  }
+
+  export type PlaygroundOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "template" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["playground"]>
+  export type PlaygroundInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $PlaygroundPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Playground"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      title: string
+      description: string
+      template: $Enums.Templates
+      createdAt: Date
+      updatedAt: Date
+      userId: string
+    }, ExtArgs["result"]["playground"]>
+    composites: {}
+  }
+
+  type PlaygroundGetPayload<S extends boolean | null | undefined | PlaygroundDefaultArgs> = $Result.GetResult<Prisma.$PlaygroundPayload, S>
+
+  type PlaygroundCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PlaygroundFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PlaygroundCountAggregateInputType | true
+    }
+
+  export interface PlaygroundDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Playground'], meta: { name: 'Playground' } }
+    /**
+     * Find zero or one Playground that matches the filter.
+     * @param {PlaygroundFindUniqueArgs} args - Arguments to find a Playground
+     * @example
+     * // Get one Playground
+     * const playground = await prisma.playground.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PlaygroundFindUniqueArgs>(args: SelectSubset<T, PlaygroundFindUniqueArgs<ExtArgs>>): Prisma__PlaygroundClient<$Result.GetResult<Prisma.$PlaygroundPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Playground that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PlaygroundFindUniqueOrThrowArgs} args - Arguments to find a Playground
+     * @example
+     * // Get one Playground
+     * const playground = await prisma.playground.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PlaygroundFindUniqueOrThrowArgs>(args: SelectSubset<T, PlaygroundFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PlaygroundClient<$Result.GetResult<Prisma.$PlaygroundPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Playground that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlaygroundFindFirstArgs} args - Arguments to find a Playground
+     * @example
+     * // Get one Playground
+     * const playground = await prisma.playground.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PlaygroundFindFirstArgs>(args?: SelectSubset<T, PlaygroundFindFirstArgs<ExtArgs>>): Prisma__PlaygroundClient<$Result.GetResult<Prisma.$PlaygroundPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Playground that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlaygroundFindFirstOrThrowArgs} args - Arguments to find a Playground
+     * @example
+     * // Get one Playground
+     * const playground = await prisma.playground.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PlaygroundFindFirstOrThrowArgs>(args?: SelectSubset<T, PlaygroundFindFirstOrThrowArgs<ExtArgs>>): Prisma__PlaygroundClient<$Result.GetResult<Prisma.$PlaygroundPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Playgrounds that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlaygroundFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Playgrounds
+     * const playgrounds = await prisma.playground.findMany()
+     * 
+     * // Get first 10 Playgrounds
+     * const playgrounds = await prisma.playground.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const playgroundWithIdOnly = await prisma.playground.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PlaygroundFindManyArgs>(args?: SelectSubset<T, PlaygroundFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlaygroundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Playground.
+     * @param {PlaygroundCreateArgs} args - Arguments to create a Playground.
+     * @example
+     * // Create one Playground
+     * const Playground = await prisma.playground.create({
+     *   data: {
+     *     // ... data to create a Playground
+     *   }
+     * })
+     * 
+     */
+    create<T extends PlaygroundCreateArgs>(args: SelectSubset<T, PlaygroundCreateArgs<ExtArgs>>): Prisma__PlaygroundClient<$Result.GetResult<Prisma.$PlaygroundPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Playgrounds.
+     * @param {PlaygroundCreateManyArgs} args - Arguments to create many Playgrounds.
+     * @example
+     * // Create many Playgrounds
+     * const playground = await prisma.playground.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PlaygroundCreateManyArgs>(args?: SelectSubset<T, PlaygroundCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Playground.
+     * @param {PlaygroundDeleteArgs} args - Arguments to delete one Playground.
+     * @example
+     * // Delete one Playground
+     * const Playground = await prisma.playground.delete({
+     *   where: {
+     *     // ... filter to delete one Playground
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PlaygroundDeleteArgs>(args: SelectSubset<T, PlaygroundDeleteArgs<ExtArgs>>): Prisma__PlaygroundClient<$Result.GetResult<Prisma.$PlaygroundPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Playground.
+     * @param {PlaygroundUpdateArgs} args - Arguments to update one Playground.
+     * @example
+     * // Update one Playground
+     * const playground = await prisma.playground.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PlaygroundUpdateArgs>(args: SelectSubset<T, PlaygroundUpdateArgs<ExtArgs>>): Prisma__PlaygroundClient<$Result.GetResult<Prisma.$PlaygroundPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Playgrounds.
+     * @param {PlaygroundDeleteManyArgs} args - Arguments to filter Playgrounds to delete.
+     * @example
+     * // Delete a few Playgrounds
+     * const { count } = await prisma.playground.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PlaygroundDeleteManyArgs>(args?: SelectSubset<T, PlaygroundDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Playgrounds.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlaygroundUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Playgrounds
+     * const playground = await prisma.playground.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PlaygroundUpdateManyArgs>(args: SelectSubset<T, PlaygroundUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Playground.
+     * @param {PlaygroundUpsertArgs} args - Arguments to update or create a Playground.
+     * @example
+     * // Update or create a Playground
+     * const playground = await prisma.playground.upsert({
+     *   create: {
+     *     // ... data to create a Playground
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Playground we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PlaygroundUpsertArgs>(args: SelectSubset<T, PlaygroundUpsertArgs<ExtArgs>>): Prisma__PlaygroundClient<$Result.GetResult<Prisma.$PlaygroundPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Playgrounds that matches the filter.
+     * @param {PlaygroundFindRawArgs} args - Select which filters you would like to apply.
+     * @example
+     * const playground = await prisma.playground.findRaw({
+     *   filter: { age: { $gt: 25 } }
+     * })
+     */
+    findRaw(args?: PlaygroundFindRawArgs): Prisma.PrismaPromise<JsonObject>
+
+    /**
+     * Perform aggregation operations on a Playground.
+     * @param {PlaygroundAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * @example
+     * const playground = await prisma.playground.aggregateRaw({
+     *   pipeline: [
+     *     { $match: { status: "registered" } },
+     *     { $group: { _id: "$country", total: { $sum: 1 } } }
+     *   ]
+     * })
+     */
+    aggregateRaw(args?: PlaygroundAggregateRawArgs): Prisma.PrismaPromise<JsonObject>
+
+
+    /**
+     * Count the number of Playgrounds.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlaygroundCountArgs} args - Arguments to filter Playgrounds to count.
+     * @example
+     * // Count the number of Playgrounds
+     * const count = await prisma.playground.count({
+     *   where: {
+     *     // ... the filter for the Playgrounds we want to count
+     *   }
+     * })
+    **/
+    count<T extends PlaygroundCountArgs>(
+      args?: Subset<T, PlaygroundCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PlaygroundCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Playground.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlaygroundAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PlaygroundAggregateArgs>(args: Subset<T, PlaygroundAggregateArgs>): Prisma.PrismaPromise<GetPlaygroundAggregateType<T>>
+
+    /**
+     * Group by Playground.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlaygroundGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PlaygroundGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PlaygroundGroupByArgs['orderBy'] }
+        : { orderBy?: PlaygroundGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PlaygroundGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPlaygroundGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Playground model
+   */
+  readonly fields: PlaygroundFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Playground.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PlaygroundClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Playground model
+   */
+  interface PlaygroundFieldRefs {
+    readonly id: FieldRef<"Playground", 'String'>
+    readonly title: FieldRef<"Playground", 'String'>
+    readonly description: FieldRef<"Playground", 'String'>
+    readonly template: FieldRef<"Playground", 'Templates'>
+    readonly createdAt: FieldRef<"Playground", 'DateTime'>
+    readonly updatedAt: FieldRef<"Playground", 'DateTime'>
+    readonly userId: FieldRef<"Playground", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Playground findUnique
+   */
+  export type PlaygroundFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Playground
+     */
+    select?: PlaygroundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Playground
+     */
+    omit?: PlaygroundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaygroundInclude<ExtArgs> | null
+    /**
+     * Filter, which Playground to fetch.
+     */
+    where: PlaygroundWhereUniqueInput
+  }
+
+  /**
+   * Playground findUniqueOrThrow
+   */
+  export type PlaygroundFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Playground
+     */
+    select?: PlaygroundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Playground
+     */
+    omit?: PlaygroundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaygroundInclude<ExtArgs> | null
+    /**
+     * Filter, which Playground to fetch.
+     */
+    where: PlaygroundWhereUniqueInput
+  }
+
+  /**
+   * Playground findFirst
+   */
+  export type PlaygroundFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Playground
+     */
+    select?: PlaygroundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Playground
+     */
+    omit?: PlaygroundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaygroundInclude<ExtArgs> | null
+    /**
+     * Filter, which Playground to fetch.
+     */
+    where?: PlaygroundWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Playgrounds to fetch.
+     */
+    orderBy?: PlaygroundOrderByWithRelationInput | PlaygroundOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Playgrounds.
+     */
+    cursor?: PlaygroundWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Playgrounds from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Playgrounds.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Playgrounds.
+     */
+    distinct?: PlaygroundScalarFieldEnum | PlaygroundScalarFieldEnum[]
+  }
+
+  /**
+   * Playground findFirstOrThrow
+   */
+  export type PlaygroundFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Playground
+     */
+    select?: PlaygroundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Playground
+     */
+    omit?: PlaygroundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaygroundInclude<ExtArgs> | null
+    /**
+     * Filter, which Playground to fetch.
+     */
+    where?: PlaygroundWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Playgrounds to fetch.
+     */
+    orderBy?: PlaygroundOrderByWithRelationInput | PlaygroundOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Playgrounds.
+     */
+    cursor?: PlaygroundWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Playgrounds from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Playgrounds.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Playgrounds.
+     */
+    distinct?: PlaygroundScalarFieldEnum | PlaygroundScalarFieldEnum[]
+  }
+
+  /**
+   * Playground findMany
+   */
+  export type PlaygroundFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Playground
+     */
+    select?: PlaygroundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Playground
+     */
+    omit?: PlaygroundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaygroundInclude<ExtArgs> | null
+    /**
+     * Filter, which Playgrounds to fetch.
+     */
+    where?: PlaygroundWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Playgrounds to fetch.
+     */
+    orderBy?: PlaygroundOrderByWithRelationInput | PlaygroundOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Playgrounds.
+     */
+    cursor?: PlaygroundWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Playgrounds from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Playgrounds.
+     */
+    skip?: number
+    distinct?: PlaygroundScalarFieldEnum | PlaygroundScalarFieldEnum[]
+  }
+
+  /**
+   * Playground create
+   */
+  export type PlaygroundCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Playground
+     */
+    select?: PlaygroundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Playground
+     */
+    omit?: PlaygroundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaygroundInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Playground.
+     */
+    data: XOR<PlaygroundCreateInput, PlaygroundUncheckedCreateInput>
+  }
+
+  /**
+   * Playground createMany
+   */
+  export type PlaygroundCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Playgrounds.
+     */
+    data: PlaygroundCreateManyInput | PlaygroundCreateManyInput[]
+  }
+
+  /**
+   * Playground update
+   */
+  export type PlaygroundUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Playground
+     */
+    select?: PlaygroundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Playground
+     */
+    omit?: PlaygroundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaygroundInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Playground.
+     */
+    data: XOR<PlaygroundUpdateInput, PlaygroundUncheckedUpdateInput>
+    /**
+     * Choose, which Playground to update.
+     */
+    where: PlaygroundWhereUniqueInput
+  }
+
+  /**
+   * Playground updateMany
+   */
+  export type PlaygroundUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Playgrounds.
+     */
+    data: XOR<PlaygroundUpdateManyMutationInput, PlaygroundUncheckedUpdateManyInput>
+    /**
+     * Filter which Playgrounds to update
+     */
+    where?: PlaygroundWhereInput
+    /**
+     * Limit how many Playgrounds to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Playground upsert
+   */
+  export type PlaygroundUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Playground
+     */
+    select?: PlaygroundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Playground
+     */
+    omit?: PlaygroundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaygroundInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Playground to update in case it exists.
+     */
+    where: PlaygroundWhereUniqueInput
+    /**
+     * In case the Playground found by the `where` argument doesn't exist, create a new Playground with this data.
+     */
+    create: XOR<PlaygroundCreateInput, PlaygroundUncheckedCreateInput>
+    /**
+     * In case the Playground was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PlaygroundUpdateInput, PlaygroundUncheckedUpdateInput>
+  }
+
+  /**
+   * Playground delete
+   */
+  export type PlaygroundDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Playground
+     */
+    select?: PlaygroundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Playground
+     */
+    omit?: PlaygroundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaygroundInclude<ExtArgs> | null
+    /**
+     * Filter which Playground to delete.
+     */
+    where: PlaygroundWhereUniqueInput
+  }
+
+  /**
+   * Playground deleteMany
+   */
+  export type PlaygroundDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Playgrounds to delete
+     */
+    where?: PlaygroundWhereInput
+    /**
+     * Limit how many Playgrounds to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Playground findRaw
+   */
+  export type PlaygroundFindRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+     */
+    filter?: InputJsonValue
+    /**
+     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+  /**
+   * Playground aggregateRaw
+   */
+  export type PlaygroundAggregateRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+     */
+    pipeline?: InputJsonValue[]
+    /**
+     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+  /**
+   * Playground without action
+   */
+  export type PlaygroundDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Playground
+     */
+    select?: PlaygroundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Playground
+     */
+    omit?: PlaygroundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlaygroundInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -3076,7 +4243,9 @@ export namespace Prisma {
     name: 'name',
     email: 'email',
     image: 'image',
-    role: 'role'
+    role: 'role',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -3100,6 +4269,19 @@ export namespace Prisma {
   };
 
   export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
+
+
+  export const PlaygroundScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    description: 'description',
+    template: 'template',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    userId: 'userId'
+  };
+
+  export type PlaygroundScalarFieldEnum = (typeof PlaygroundScalarFieldEnum)[keyof typeof PlaygroundScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -3152,6 +4334,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'DateTime'
+   */
+  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+  /**
+   * Reference to a field of type 'DateTime[]'
+   */
+  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -3166,16 +4362,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'DateTime'
+   * Reference to a field of type 'Templates'
    */
-  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+  export type EnumTemplatesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Templates'>
     
 
 
   /**
-   * Reference to a field of type 'DateTime[]'
+   * Reference to a field of type 'Templates[]'
    */
-  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+  export type ListEnumTemplatesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Templates[]'>
     
 
 
@@ -3205,7 +4401,10 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     image?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
     accounts?: AccountListRelationFilter
+    myPlayground?: PlaygroundListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -3214,7 +4413,10 @@ export namespace Prisma {
     email?: SortOrder
     image?: SortOrder
     role?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     accounts?: AccountOrderByRelationAggregateInput
+    myPlayground?: PlaygroundOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -3226,7 +4428,10 @@ export namespace Prisma {
     name?: StringNullableFilter<"User"> | string | null
     image?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
     accounts?: AccountListRelationFilter
+    myPlayground?: PlaygroundListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -3235,6 +4440,8 @@ export namespace Prisma {
     email?: SortOrder
     image?: SortOrder
     role?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -3249,6 +4456,8 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
+    createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
   export type AccountWhereInput = {
@@ -3354,13 +4563,81 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Account"> | Date | string
   }
 
+  export type PlaygroundWhereInput = {
+    AND?: PlaygroundWhereInput | PlaygroundWhereInput[]
+    OR?: PlaygroundWhereInput[]
+    NOT?: PlaygroundWhereInput | PlaygroundWhereInput[]
+    id?: StringFilter<"Playground"> | string
+    title?: StringFilter<"Playground"> | string
+    description?: StringFilter<"Playground"> | string
+    template?: EnumTemplatesFilter<"Playground"> | $Enums.Templates
+    createdAt?: DateTimeFilter<"Playground"> | Date | string
+    updatedAt?: DateTimeFilter<"Playground"> | Date | string
+    userId?: StringFilter<"Playground"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type PlaygroundOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    template?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type PlaygroundWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PlaygroundWhereInput | PlaygroundWhereInput[]
+    OR?: PlaygroundWhereInput[]
+    NOT?: PlaygroundWhereInput | PlaygroundWhereInput[]
+    title?: StringFilter<"Playground"> | string
+    description?: StringFilter<"Playground"> | string
+    template?: EnumTemplatesFilter<"Playground"> | $Enums.Templates
+    createdAt?: DateTimeFilter<"Playground"> | Date | string
+    updatedAt?: DateTimeFilter<"Playground"> | Date | string
+    userId?: StringFilter<"Playground"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type PlaygroundOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    template?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    _count?: PlaygroundCountOrderByAggregateInput
+    _max?: PlaygroundMaxOrderByAggregateInput
+    _min?: PlaygroundMinOrderByAggregateInput
+  }
+
+  export type PlaygroundScalarWhereWithAggregatesInput = {
+    AND?: PlaygroundScalarWhereWithAggregatesInput | PlaygroundScalarWhereWithAggregatesInput[]
+    OR?: PlaygroundScalarWhereWithAggregatesInput[]
+    NOT?: PlaygroundScalarWhereWithAggregatesInput | PlaygroundScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Playground"> | string
+    title?: StringWithAggregatesFilter<"Playground"> | string
+    description?: StringWithAggregatesFilter<"Playground"> | string
+    template?: EnumTemplatesWithAggregatesFilter<"Playground"> | $Enums.Templates
+    createdAt?: DateTimeWithAggregatesFilter<"Playground"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Playground"> | Date | string
+    userId?: StringWithAggregatesFilter<"Playground"> | string
+  }
+
   export type UserCreateInput = {
     id?: string
     name?: string | null
     email: string
     image?: string | null
     role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
     accounts?: AccountCreateNestedManyWithoutUserInput
+    myPlayground?: PlaygroundCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -3369,7 +4646,10 @@ export namespace Prisma {
     email: string
     image?: string | null
     role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    myPlayground?: PlaygroundUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -3377,7 +4657,10 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: AccountUpdateManyWithoutUserNestedInput
+    myPlayground?: PlaygroundUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -3385,7 +4668,10 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    myPlayground?: PlaygroundUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -3394,6 +4680,8 @@ export namespace Prisma {
     email: string
     image?: string | null
     role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type UserUpdateManyMutationInput = {
@@ -3401,6 +4689,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -3408,6 +4698,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AccountCreateInput = {
@@ -3524,6 +4816,71 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PlaygroundCreateInput = {
+    id?: string
+    title: string
+    description: string
+    template?: $Enums.Templates
+    createdAt?: Date | string
+    updatedAt: Date | string
+    user: UserCreateNestedOneWithoutMyPlaygroundInput
+  }
+
+  export type PlaygroundUncheckedCreateInput = {
+    id?: string
+    title: string
+    description: string
+    template?: $Enums.Templates
+    createdAt?: Date | string
+    updatedAt: Date | string
+    userId: string
+  }
+
+  export type PlaygroundUpdateInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    template?: EnumTemplatesFieldUpdateOperationsInput | $Enums.Templates
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutMyPlaygroundNestedInput
+  }
+
+  export type PlaygroundUncheckedUpdateInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    template?: EnumTemplatesFieldUpdateOperationsInput | $Enums.Templates
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PlaygroundCreateManyInput = {
+    id?: string
+    title: string
+    description: string
+    template?: $Enums.Templates
+    createdAt?: Date | string
+    updatedAt: Date | string
+    userId: string
+  }
+
+  export type PlaygroundUpdateManyMutationInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    template?: EnumTemplatesFieldUpdateOperationsInput | $Enums.Templates
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlaygroundUncheckedUpdateManyInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    template?: EnumTemplatesFieldUpdateOperationsInput | $Enums.Templates
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -3562,13 +4919,34 @@ export namespace Prisma {
     not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
   }
 
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
   export type AccountListRelationFilter = {
     every?: AccountWhereInput
     some?: AccountWhereInput
     none?: AccountWhereInput
   }
 
+  export type PlaygroundListRelationFilter = {
+    every?: PlaygroundWhereInput
+    some?: PlaygroundWhereInput
+    none?: PlaygroundWhereInput
+  }
+
   export type AccountOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PlaygroundOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -3578,6 +4956,8 @@ export namespace Prisma {
     email?: SortOrder
     image?: SortOrder
     role?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -3586,6 +4966,8 @@ export namespace Prisma {
     email?: SortOrder
     image?: SortOrder
     role?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -3594,6 +4976,8 @@ export namespace Prisma {
     email?: SortOrder
     image?: SortOrder
     role?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -3643,6 +5027,20 @@ export namespace Prisma {
     _max?: NestedEnumUserRoleFilter<$PrismaModel>
   }
 
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
   export type IntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -3653,17 +5051,6 @@ export namespace Prisma {
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
     isSet?: boolean
-  }
-
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type UserScalarRelationFilter = {
@@ -3752,18 +5139,51 @@ export namespace Prisma {
     isSet?: boolean
   }
 
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+  export type EnumTemplatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Templates | EnumTemplatesFieldRefInput<$PrismaModel>
+    in?: $Enums.Templates[] | ListEnumTemplatesFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Templates[] | ListEnumTemplatesFieldRefInput<$PrismaModel>
+    not?: NestedEnumTemplatesFilter<$PrismaModel> | $Enums.Templates
+  }
+
+  export type PlaygroundCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    template?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type PlaygroundMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    template?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type PlaygroundMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    template?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type EnumTemplatesWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Templates | EnumTemplatesFieldRefInput<$PrismaModel>
+    in?: $Enums.Templates[] | ListEnumTemplatesFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Templates[] | ListEnumTemplatesFieldRefInput<$PrismaModel>
+    not?: NestedEnumTemplatesWithAggregatesFilter<$PrismaModel> | $Enums.Templates
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
+    _min?: NestedEnumTemplatesFilter<$PrismaModel>
+    _max?: NestedEnumTemplatesFilter<$PrismaModel>
   }
 
   export type AccountCreateNestedManyWithoutUserInput = {
@@ -3773,11 +5193,25 @@ export namespace Prisma {
     connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
   }
 
+  export type PlaygroundCreateNestedManyWithoutUserInput = {
+    create?: XOR<PlaygroundCreateWithoutUserInput, PlaygroundUncheckedCreateWithoutUserInput> | PlaygroundCreateWithoutUserInput[] | PlaygroundUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlaygroundCreateOrConnectWithoutUserInput | PlaygroundCreateOrConnectWithoutUserInput[]
+    createMany?: PlaygroundCreateManyUserInputEnvelope
+    connect?: PlaygroundWhereUniqueInput | PlaygroundWhereUniqueInput[]
+  }
+
   export type AccountUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
     createMany?: AccountCreateManyUserInputEnvelope
     connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
+  }
+
+  export type PlaygroundUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<PlaygroundCreateWithoutUserInput, PlaygroundUncheckedCreateWithoutUserInput> | PlaygroundCreateWithoutUserInput[] | PlaygroundUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlaygroundCreateOrConnectWithoutUserInput | PlaygroundCreateOrConnectWithoutUserInput[]
+    createMany?: PlaygroundCreateManyUserInputEnvelope
+    connect?: PlaygroundWhereUniqueInput | PlaygroundWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -3791,6 +5225,10 @@ export namespace Prisma {
 
   export type EnumUserRoleFieldUpdateOperationsInput = {
     set?: $Enums.UserRole
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
   }
 
   export type AccountUpdateManyWithoutUserNestedInput = {
@@ -3807,6 +5245,20 @@ export namespace Prisma {
     deleteMany?: AccountScalarWhereInput | AccountScalarWhereInput[]
   }
 
+  export type PlaygroundUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PlaygroundCreateWithoutUserInput, PlaygroundUncheckedCreateWithoutUserInput> | PlaygroundCreateWithoutUserInput[] | PlaygroundUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlaygroundCreateOrConnectWithoutUserInput | PlaygroundCreateOrConnectWithoutUserInput[]
+    upsert?: PlaygroundUpsertWithWhereUniqueWithoutUserInput | PlaygroundUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PlaygroundCreateManyUserInputEnvelope
+    set?: PlaygroundWhereUniqueInput | PlaygroundWhereUniqueInput[]
+    disconnect?: PlaygroundWhereUniqueInput | PlaygroundWhereUniqueInput[]
+    delete?: PlaygroundWhereUniqueInput | PlaygroundWhereUniqueInput[]
+    connect?: PlaygroundWhereUniqueInput | PlaygroundWhereUniqueInput[]
+    update?: PlaygroundUpdateWithWhereUniqueWithoutUserInput | PlaygroundUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PlaygroundUpdateManyWithWhereWithoutUserInput | PlaygroundUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PlaygroundScalarWhereInput | PlaygroundScalarWhereInput[]
+  }
+
   export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -3819,6 +5271,20 @@ export namespace Prisma {
     update?: AccountUpdateWithWhereUniqueWithoutUserInput | AccountUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: AccountUpdateManyWithWhereWithoutUserInput | AccountUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: AccountScalarWhereInput | AccountScalarWhereInput[]
+  }
+
+  export type PlaygroundUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PlaygroundCreateWithoutUserInput, PlaygroundUncheckedCreateWithoutUserInput> | PlaygroundCreateWithoutUserInput[] | PlaygroundUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlaygroundCreateOrConnectWithoutUserInput | PlaygroundCreateOrConnectWithoutUserInput[]
+    upsert?: PlaygroundUpsertWithWhereUniqueWithoutUserInput | PlaygroundUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PlaygroundCreateManyUserInputEnvelope
+    set?: PlaygroundWhereUniqueInput | PlaygroundWhereUniqueInput[]
+    disconnect?: PlaygroundWhereUniqueInput | PlaygroundWhereUniqueInput[]
+    delete?: PlaygroundWhereUniqueInput | PlaygroundWhereUniqueInput[]
+    connect?: PlaygroundWhereUniqueInput | PlaygroundWhereUniqueInput[]
+    update?: PlaygroundUpdateWithWhereUniqueWithoutUserInput | PlaygroundUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PlaygroundUpdateManyWithWhereWithoutUserInput | PlaygroundUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PlaygroundScalarWhereInput | PlaygroundScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutAccountsInput = {
@@ -3836,16 +5302,30 @@ export namespace Prisma {
     unset?: boolean
   }
 
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
-  }
-
   export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
     create?: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAccountsInput
     upsert?: UserUpsertWithoutAccountsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAccountsInput, UserUpdateWithoutAccountsInput>, UserUncheckedUpdateWithoutAccountsInput>
+  }
+
+  export type UserCreateNestedOneWithoutMyPlaygroundInput = {
+    create?: XOR<UserCreateWithoutMyPlaygroundInput, UserUncheckedCreateWithoutMyPlaygroundInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMyPlaygroundInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumTemplatesFieldUpdateOperationsInput = {
+    set?: $Enums.Templates
+  }
+
+  export type UserUpdateOneRequiredWithoutMyPlaygroundNestedInput = {
+    create?: XOR<UserCreateWithoutMyPlaygroundInput, UserUncheckedCreateWithoutMyPlaygroundInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMyPlaygroundInput
+    upsert?: UserUpsertWithoutMyPlaygroundInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMyPlaygroundInput, UserUpdateWithoutMyPlaygroundInput>, UserUncheckedUpdateWithoutMyPlaygroundInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -3882,6 +5362,17 @@ export namespace Prisma {
     in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
     notIn?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
     not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
+  }
+
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -3952,7 +5443,7 @@ export namespace Prisma {
     _max?: NestedEnumUserRoleFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -3960,7 +5451,10 @@ export namespace Prisma {
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -3992,18 +5486,21 @@ export namespace Prisma {
     isSet?: boolean
   }
 
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+  export type NestedEnumTemplatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Templates | EnumTemplatesFieldRefInput<$PrismaModel>
+    in?: $Enums.Templates[] | ListEnumTemplatesFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Templates[] | ListEnumTemplatesFieldRefInput<$PrismaModel>
+    not?: NestedEnumTemplatesFilter<$PrismaModel> | $Enums.Templates
+  }
+
+  export type NestedEnumTemplatesWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Templates | EnumTemplatesFieldRefInput<$PrismaModel>
+    in?: $Enums.Templates[] | ListEnumTemplatesFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Templates[] | ListEnumTemplatesFieldRefInput<$PrismaModel>
+    not?: NestedEnumTemplatesWithAggregatesFilter<$PrismaModel> | $Enums.Templates
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
+    _min?: NestedEnumTemplatesFilter<$PrismaModel>
+    _max?: NestedEnumTemplatesFilter<$PrismaModel>
   }
 
   export type AccountCreateWithoutUserInput = {
@@ -4047,6 +5544,33 @@ export namespace Prisma {
     data: AccountCreateManyUserInput | AccountCreateManyUserInput[]
   }
 
+  export type PlaygroundCreateWithoutUserInput = {
+    id?: string
+    title: string
+    description: string
+    template?: $Enums.Templates
+    createdAt?: Date | string
+    updatedAt: Date | string
+  }
+
+  export type PlaygroundUncheckedCreateWithoutUserInput = {
+    id?: string
+    title: string
+    description: string
+    template?: $Enums.Templates
+    createdAt?: Date | string
+    updatedAt: Date | string
+  }
+
+  export type PlaygroundCreateOrConnectWithoutUserInput = {
+    where: PlaygroundWhereUniqueInput
+    create: XOR<PlaygroundCreateWithoutUserInput, PlaygroundUncheckedCreateWithoutUserInput>
+  }
+
+  export type PlaygroundCreateManyUserInputEnvelope = {
+    data: PlaygroundCreateManyUserInput | PlaygroundCreateManyUserInput[]
+  }
+
   export type AccountUpsertWithWhereUniqueWithoutUserInput = {
     where: AccountWhereUniqueInput
     update: XOR<AccountUpdateWithoutUserInput, AccountUncheckedUpdateWithoutUserInput>
@@ -4083,12 +5607,44 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Account"> | Date | string
   }
 
+  export type PlaygroundUpsertWithWhereUniqueWithoutUserInput = {
+    where: PlaygroundWhereUniqueInput
+    update: XOR<PlaygroundUpdateWithoutUserInput, PlaygroundUncheckedUpdateWithoutUserInput>
+    create: XOR<PlaygroundCreateWithoutUserInput, PlaygroundUncheckedCreateWithoutUserInput>
+  }
+
+  export type PlaygroundUpdateWithWhereUniqueWithoutUserInput = {
+    where: PlaygroundWhereUniqueInput
+    data: XOR<PlaygroundUpdateWithoutUserInput, PlaygroundUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PlaygroundUpdateManyWithWhereWithoutUserInput = {
+    where: PlaygroundScalarWhereInput
+    data: XOR<PlaygroundUpdateManyMutationInput, PlaygroundUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type PlaygroundScalarWhereInput = {
+    AND?: PlaygroundScalarWhereInput | PlaygroundScalarWhereInput[]
+    OR?: PlaygroundScalarWhereInput[]
+    NOT?: PlaygroundScalarWhereInput | PlaygroundScalarWhereInput[]
+    id?: StringFilter<"Playground"> | string
+    title?: StringFilter<"Playground"> | string
+    description?: StringFilter<"Playground"> | string
+    template?: EnumTemplatesFilter<"Playground"> | $Enums.Templates
+    createdAt?: DateTimeFilter<"Playground"> | Date | string
+    updatedAt?: DateTimeFilter<"Playground"> | Date | string
+    userId?: StringFilter<"Playground"> | string
+  }
+
   export type UserCreateWithoutAccountsInput = {
     id?: string
     name?: string | null
     email: string
     image?: string | null
     role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    myPlayground?: PlaygroundCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -4097,6 +5653,9 @@ export namespace Prisma {
     email: string
     image?: string | null
     role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    myPlayground?: PlaygroundUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -4120,6 +5679,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    myPlayground?: PlaygroundUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -4127,6 +5689,67 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    myPlayground?: PlaygroundUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutMyPlaygroundInput = {
+    id?: string
+    name?: string | null
+    email: string
+    image?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutMyPlaygroundInput = {
+    id?: string
+    name?: string | null
+    email: string
+    image?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutMyPlaygroundInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMyPlaygroundInput, UserUncheckedCreateWithoutMyPlaygroundInput>
+  }
+
+  export type UserUpsertWithoutMyPlaygroundInput = {
+    update: XOR<UserUpdateWithoutMyPlaygroundInput, UserUncheckedUpdateWithoutMyPlaygroundInput>
+    create: XOR<UserCreateWithoutMyPlaygroundInput, UserUncheckedCreateWithoutMyPlaygroundInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMyPlaygroundInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMyPlaygroundInput, UserUncheckedUpdateWithoutMyPlaygroundInput>
+  }
+
+  export type UserUpdateWithoutMyPlaygroundInput = {
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMyPlaygroundInput = {
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateManyUserInput = {
@@ -4143,6 +5766,15 @@ export namespace Prisma {
     session_state?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type PlaygroundCreateManyUserInput = {
+    id?: string
+    title: string
+    description: string
+    template?: $Enums.Templates
+    createdAt?: Date | string
+    updatedAt: Date | string
   }
 
   export type AccountUpdateWithoutUserInput = {
@@ -4186,6 +5818,30 @@ export namespace Prisma {
     scope?: NullableStringFieldUpdateOperationsInput | string | null
     id_token?: NullableStringFieldUpdateOperationsInput | string | null
     session_state?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlaygroundUpdateWithoutUserInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    template?: EnumTemplatesFieldUpdateOperationsInput | $Enums.Templates
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlaygroundUncheckedUpdateWithoutUserInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    template?: EnumTemplatesFieldUpdateOperationsInput | $Enums.Templates
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlaygroundUncheckedUpdateManyWithoutUserInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    template?: EnumTemplatesFieldUpdateOperationsInput | $Enums.Templates
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
