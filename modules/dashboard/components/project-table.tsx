@@ -53,6 +53,7 @@ import {
   Eye,
 } from "lucide-react";
 import { toast } from "sonner";
+import { MarkedToggleButton } from "./marked-toggle";
 
 interface ProjectTableProps {
   projects: Project[];
@@ -88,15 +89,34 @@ export default function ProjectTable({
   const [favoutrie, setFavourite] = useState(false);
 
   const handleEditClick = (project: Project) => {
-    //    Write your logic here
+    setSelectedProject(project);
+    setEditData({
+      title: project.title,
+      description: project.description || "",
+    });
+    setEditDialogOpen(true);
   };
 
   const handleDeleteClick = async (project: Project) => {
-    //    Write your logic here
+    setSelectedProject(project);
+    setDeleteDialogOpen(true);
   };
 
   const handleUpdateProject = async () => {
-    //    Write your logic here
+     if (!selectedProject || !onUpdateProject) return;
+
+     setIsLoading(true);
+
+      try {
+        await onUpdateProject(selectedProject.id, editData);
+        setEditDialogOpen(false);
+        toast.success("Project updated successfully");
+      } catch (error) {
+        toast.error("Failed to update project");
+        console.error("Error updating project:", error);
+      } finally {
+        setIsLoading(false);
+      }
   };
 
   const handleMarkasFavorite = async (project: Project) => {
@@ -104,16 +124,42 @@ export default function ProjectTable({
   };
 
   const handleDeleteProject = async () => {
-    //    Write your logic here
+    if (!selectedProject || !onDeleteProject) return;
+
+    setIsLoading(true);
+    try {
+      await onDeleteProject(selectedProject.id);
+      setDeleteDialogOpen(false);
+      setSelectedProject(null);
+      toast.success("Project deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete project");
+      console.error("Error deleting project:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleDuplicateProject = async (project: Project) => {
-    //    Write your logic here
-  };
+   const handleDuplicateProject = async (project: Project) => {
+     if (!onDuplicateProject) return;
 
-  const copyProjectUrl = (projectId: string) => {
-    //    Write your logic here
-  };
+     setIsLoading(true);
+     try {
+       await onDuplicateProject(project.id);
+       toast.success("Project duplicated successfully");
+     } catch (error) {
+       toast.error("Failed to duplicate project");
+       console.error("Error duplicating project:", error);
+     } finally {
+       setIsLoading(false);
+     }
+   };
+
+   const copyProjectUrl = (projectId: string) => {
+     const url = `${window.location.origin}/playground/${projectId}`;
+     navigator.clipboard.writeText(url);
+     toast.success("Project url copied to clipboard");
+   };
 
   return (
     <>
@@ -134,7 +180,7 @@ export default function ProjectTable({
                 <TableCell className="font-medium">
                   <div className="flex flex-col">
                     <Link
-                      href={`/playground${project.id}`}
+                      href={`/playground/${project.id}`}
                       className="hover:underline"
                     >
                       <span className="font-semibold">{project.title}</span>
@@ -153,14 +199,16 @@ export default function ProjectTable({
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  {format(new Date(project.createdAt), "MMM d, yyyy")}
+                  <span className="text-sm text-gray-500">
+                    {format(new Date(project.createdAt), "MMM dd, yyyy")}
+                  </span>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full overflow-hidden">
                       <Image
                         src={project.user.image || "/placeholder.svg"}
-                        alt={project.user.name}
+                        alt={project.user.name || "User avatar"}
                         width={32}
                         height={32}
                         className="object-cover"
@@ -173,17 +221,27 @@ export default function ProjectTable({
                   <DropdownMenu>
                     <DropdownMenuTrigger
                       render={
-                        <Button variant="ghost" size="icon" className="h-8 w-8" />
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                        />
                       }
                     >
                       <MoreHorizontal className="h-4 w-4" />
                       <span className="sr-only">Open menu</span>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuItem >
+                        <MarkedToggleButton
+                          markedForRevision={project.Starmark[0]?.isMarked}
+                          id={project.id}
+                        />
+                      </DropdownMenuItem>
                       <DropdownMenuItem
                         render={
                           <Link
-                            href={`/playground${project.id}`}
+                            href={`/playground/${project.id}`}
                             className="flex items-center"
                           />
                         }
@@ -194,7 +252,7 @@ export default function ProjectTable({
                       <DropdownMenuItem
                         render={
                           <Link
-                            href={`/playground${project.id}`}
+                            href={`/playground/${project.id}`}
                             target="_blank"
                             className="flex items-center"
                           />
@@ -323,3 +381,4 @@ export default function ProjectTable({
     </>
   );
 }
+
