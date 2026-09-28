@@ -23,6 +23,7 @@ model User {
   accounts Account[]
   role UserRole @default(USER)
   myPlayground Playground[]
+  staredPlayground StarMark[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -43,6 +44,8 @@ model Account {
   scope             String?
   id_token          String? @map("id_token")
   session_state     String? @map("session_state")
+
+  
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -67,22 +70,21 @@ model Playground {
   title String
   description String
   template Templates @default(REACT)
-  //todo templateFiles
   createdAt DateTime @default(now())
   updatedAt DateTime 
-  // Starmark StarMark[]
+  Starmark StarMark[]
   userId String
   user   User        @relation(fields: [userId],references: [id],onDelete: Cascade)
 }
 
-// model StarMark{
-//   id                String        @id @default(cuid()) @map("_id")
-//   userId            String
-//   playgroundId      String
-//   isMarked          Boolean
-//   createdAt         DateTime      @default(now())
-//   user              User          @relation(fields: [userId],references: [id],onDelete: Cascade)
-//   Playground        Playground    @relation(fields: [playgroundId],references: [id],onDelete: Cascade)
+model StarMark{
+  id                String        @id @default(cuid()) @map("_id")
+  userId            String
+  playgroundId      String
+  isMarked          Boolean
+  createdAt         DateTime      @default(now())
+  user   User   @relation(fields: [userId],references: [id],onDelete: Cascade)
+  Playground  Playground   @relation(fields: [playgroundId],references: [id],onDelete: Cascade)
 
-//   @@unique([userId,playgroundId])
-// }
+  @@unique([userId,playgroundId])
+}

@@ -38,10 +38,10 @@ import {
 import Image from "next/image";
 
 // Define the interface for a single playground item, icon is now a string
-interface PlaygroundData {
+export interface PlaygroundData {
   id: string;
   name: string;
-  icon: string; // Changed to string
+  icon: string;
   starred: boolean;
 }
 

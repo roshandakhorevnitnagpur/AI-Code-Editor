@@ -1,7 +1,7 @@
 import {
-//   deleteProjectById,
-//   duplicateProjectById,
-//   editProjectById,
+  deleteProjectById,
+  duplicateProjectById,
+  editProjectById,
   getAllPlaygroundForUser,
 } from "@/modules/dashboard/actions";
 import AddNewButton from "@/modules/dashboard/components/add-new";
@@ -26,9 +26,11 @@ const Page = async () => {
           <EmptyState />
         ) : (
           <ProjectTable
+          //@ts-ignore
             projects={playgrounds || []}
             onDeleteProject={deleteProjectById}
             onUpdateProject={editProjectById}
+            // @ts-ignore
             onDuplicateProject={duplicateProjectById}
           />
         )}

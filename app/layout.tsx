@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import {SessionProvider} from "next-auth/react";
-import {auth} from "@/auth"
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth";
 import { ThemeProvider } from "@/components/ui/providers/theme-providers";
+import { Toaster } from "sonner";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,7 +29,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth()
+  const session = await auth();
   return (
     <SessionProvider session={session}>
       <html
@@ -50,7 +51,12 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <div className="flex flex-col min-h-screen">
+              <div className="flex-1">
+                <Toaster />
+              </div>
+              {children}
+            </div>
           </ThemeProvider>
         </body>
       </html>
