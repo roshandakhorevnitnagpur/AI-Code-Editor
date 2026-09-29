@@ -137,11 +137,9 @@ export function TemplateFileTree({
         <SidebarGroup>
           <SidebarGroupLabel>{title}</SidebarGroupLabel>
           <DropdownMenu>
-            <DropdownMenuTrigger>
-              <SidebarGroupAction>
+            <DropdownMenuTrigger render={<SidebarGroupAction> 
                 <Plus className="h-4 w-4" />
-              </SidebarGroupAction>
-            </DropdownMenuTrigger>
+              </SidebarGroupAction>} />
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={handleAddRootFile}>
                 <FilePlus className="h-4 w-4 mr-2" />
@@ -295,15 +293,13 @@ function TemplateNode({
           </SidebarMenuButton>
 
           <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Button
+            <DropdownMenuTrigger render={<Button
                 variant="ghost"
                 size="icon"
                 className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
               >
                 <MoreHorizontal className="h-3 w-3" />
-              </Button>
-            </DropdownMenuTrigger>
+              </Button>} />
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={handleRename}>
                 <Edit3 className="h-4 w-4 mr-2" />
@@ -412,15 +408,13 @@ function TemplateNode({
             </CollapsibleTrigger>
 
             <DropdownMenu>
-              <DropdownMenuTrigger >
-                <Button
+              <DropdownMenuTrigger render={<Button
                   variant="ghost"
                   size="icon"
                   className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
                 >
                   <MoreHorizontal className="h-3 w-3" />
-                </Button>
-              </DropdownMenuTrigger>
+                </Button>} />
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={handleAddFile}>
                   <FilePlus className="h-4 w-4 mr-2" />

@@ -2,8 +2,8 @@
 
 import { useRef, useEffect, useCallback } from "react"
 import Editor, { type Monaco } from "@monaco-editor/react"
-import { TemplateFile } from "../lib/path-to-json"
-import { configureMonaco, defaultEditorOptions, getEditorLanguage } from "../lib/editor-config"
+import { TemplateFile } from "@/modules/playground/lib/path-to-json"
+import { configureMonaco, defaultEditorOptions, getEditorLanguage } from "@/modules/playground/lib/editor-config"
 
 
 interface PlaygroundEditorProps {
@@ -40,7 +40,7 @@ export const PlaygroundEditor = ({
   const isAcceptingSuggestionRef = useRef(false)
   const suggestionAcceptedRef = useRef(false)
   const suggestionTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const tabCommandRef = useRef<any>(null)
+  const tabCommandRef = useRef<{ dispose: () => void } | null>(null)
 
   // Generate unique ID for each suggestion
   const generateSuggestionId = () => `suggestion-${Date.now()}-${Math.random()}`
@@ -345,13 +345,17 @@ export const PlaygroundEditor = ({
     })
 
     // CRITICAL: Override Tab key with high priority and prevent default Monaco behavior
-    if (tabCommandRef.current) {
+    if (typeof tabCommandRef.current?.dispose === "function") {
       tabCommandRef.current.dispose()
     }
+    tabCommandRef.current = null
 
-    tabCommandRef.current = editor.addCommand(
-      monaco.KeyCode.Tab,
-      () => {
+    tabCommandRef.current = editor.addAction({
+      id: "playground.acceptSuggestionWithTab",
+      label: "Accept AI suggestion",
+      keybindings: [monaco.KeyCode.Tab],
+      precondition: "editorTextFocus && !editorReadonly && !suggestWidgetVisible",
+      run: () => {
         console.log("TAB PRESSED", {
           hasSuggestion: !!currentSuggestionRef.current,
           hasActiveSuggestion: hasActiveSuggestionAtPosition(),
@@ -387,9 +391,7 @@ export const PlaygroundEditor = ({
         console.log("DEFAULT: Using default tab behavior")
         editor.trigger("keyboard", "tab", null)
       },
-      // CRITICAL: Use specific context to override Monaco's built-in Tab handling
-      "editorTextFocus && !editorReadonly && !suggestWidgetVisible",
-    )
+    })
 
     // Escape to reject
     editor.addCommand(monaco.KeyCode.Escape, () => {
@@ -512,10 +514,10 @@ export const PlaygroundEditor = ({
         inlineCompletionProviderRef.current.dispose()
         inlineCompletionProviderRef.current = null
       }
-      if (tabCommandRef.current) {
+      if (typeof tabCommandRef.current?.dispose === "function") {
         tabCommandRef.current.dispose()
-        tabCommandRef.current = null
       }
+      tabCommandRef.current = null
     }
   }, [])
 

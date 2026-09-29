@@ -31,26 +31,21 @@ export default async function RootLayout({
 }>) {
   const session = await auth();
   return (
-    <SessionProvider session={session}>
-      <html
-        suppressHydrationWarning
-        lang="en"
-        className={cn(
-          "h-full",
-          "antialiased",
-          geistSans.variable,
-          geistMono.variable,
-          "font-sans",
-          inter.variable,
-        )}
-      >
-        <body className="min-h-full flex flex-col" suppressHydrationWarning>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+    <html
+      suppressHydrationWarning
+      lang="en"
+      className={cn(
+        "h-full",
+        "antialiased",
+        geistSans.variable,
+        geistMono.variable,
+        "font-sans",
+        inter.variable,
+      )}
+    >
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        <SessionProvider session={session}>
+          <ThemeProvider>
             <div className="flex flex-col min-h-screen">
               <div className="flex-1">
                 <Toaster />
@@ -58,8 +53,8 @@ export default async function RootLayout({
               {children}
             </div>
           </ThemeProvider>
-        </body>
-      </html>
-    </SessionProvider>
+        </SessionProvider>
+      </body>
+    </html>
   );
 }

@@ -229,7 +229,7 @@ const MainPlaygroundPage = () => {
         }
 
            const newTemplateData = await saveTemplateData(updatedTemplateData);
-        setTemplateData(newTemplateData || updatedTemplateData);
+        setTemplateData(newTemplateData ?? updatedTemplateData);
 // Update open files
         const updatedOpenFiles = openFiles.map((f) =>
           f.id === targetFileId
@@ -416,11 +416,9 @@ const MainPlaygroundPage = () => {
                />
 
                 <DropdownMenu>
-                  <DropdownMenuTrigger >
-                    <Button size="sm" variant="outline">
+                  <DropdownMenuTrigger render={<Button size="sm" variant="outline">
                       <Settings className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
+                    </Button>} />
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem
                       onClick={() => setIsPreviewVisible(!isPreviewVisible)}
@@ -490,7 +488,7 @@ const MainPlaygroundPage = () => {
                 </div>
                 <div className="flex-1">
                   <ResizablePanelGroup
-                    direction="horizontal"
+                    orientation="horizontal"
                     className="h-full"
                   >
                     <ResizablePanel defaultSize={isPreviewVisible ? 50 : 100}>

@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -52,8 +52,7 @@ const ToggleAI: React.FC<ToggleAIProps> = ({
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button 
+        <DropdownMenuTrigger render={<Button
             size="sm" 
             variant={isEnabled ? "default" : "outline"}
             className={cn(
@@ -76,9 +75,9 @@ const ToggleAI: React.FC<ToggleAIProps> = ({
             ) : (
               <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
             )}
-          </Button>
-        </DropdownMenuTrigger>
+          </Button>} />
         <DropdownMenuContent align="end" className="w-72">
+          <DropdownMenuGroup>
           <DropdownMenuLabel className="flex items-center justify-between py-2">
             <div className="flex items-center gap-2">
               <Bot className="h-4 w-4 text-muted-foreground" />
@@ -96,6 +95,7 @@ const ToggleAI: React.FC<ToggleAIProps> = ({
               {isEnabled ? "Active" : "Inactive"}
             </Badge>
           </DropdownMenuLabel>
+          </DropdownMenuGroup>
           
           {suggestionLoading && activeFeature && (
             <div className="px-3 pb-3">
