@@ -1,6 +1,6 @@
 "use client";
 
-import { useTheme } from "next-themes";
+import { useTheme } from "@/components/ui/providers/theme-providers";
 import { useEffect, useState } from "react";
 import { Moon, Sun, SunMoon } from "lucide-react";
 
